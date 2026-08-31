@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDILOGUE 電子海報 60x90</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Noto+Sans+TC:wght@400;700&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --medical-primary: #2D4D47;
+            --medical-accent: #7D8C7D;
+        }
+        body { 
+            font-family: 'Inter', 'Noto Sans TC', sans-serif; 
+            background: #f0f2f5;
+            padding: 40px;
+        }
+        /* 模擬 60cm * 90cm 比例 (2:3) */
+        .poster-canvas {
+            width: 800px; /* 這裡設定顯示寬度，截圖時可放大 */
+            height: 1200px;
+            background: #ffffff;
+            margin: 0 auto;
+            position: relative;
+            box-shadow: 0 50px 100px -20px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .header-bg {
+            background: linear-gradient(135deg, #213531 0%, #2D4D47 100%);
+        }
+        .section-title {
+            font-weight: 800;
+            color: var(--medical-primary);
+            border-left: 6px solid var(--medical-primary);
+            padding-left: 15px;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            padding: 40px;
+            flex: 1;
+        }
+        .bento-item {
+            background: #f8fafb;
+            border-radius: 30px;
+            padding: 30px;
+            border: 1px solid #eef2f3;
+        }
+        .highlight-text {
+            color: var(--medical-primary);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="poster" class="poster-canvas">
+        <!-- Header -->
+        <header class="header-bg p-12 text-white h-[200px] flex flex-col justify-center">
+            <div class="flex justify-between items-start">
+                <div>
+                    <h1 class="text-5xl font-black tracking-tighter mb-2">MEDILOGUE</h1>
+                    <p class="text-xl text-emerald-100/60 font-medium italic">Connecting Care Through AI</p>
+                </div>
+                <div class="bg-white/10 px-4 py-2 rounded-xl text-[10px] backdrop-blur-md border border-white/10 uppercase tracking-widest font-bold">
+                    Poster ID: MD-2026-X1
+                </div>
+            </div>
+            <div class="mt-6 text-2xl font-bold tracking-tight">AI 驅動之跨專業醫學人文溝通培訓平台</div>
+        </header>
+
+        <!-- Main Body -->
+        <div class="bento-grid">
+            <!-- Background -->
+            <div class="bento-item col-span-1">
+                <h2 class="section-title text-lg">背景與動機</h2>
+                <div class="space-y-4 text-gray-600 text-sm leading-relaxed">
+                    <p>目前醫學教育面臨 <span class="highlight-text">「擬真教案資源稀缺」</span> 與 <span class="highlight-text">「反饋滯後」</span> 的痛點。學生難以在低壓環境下進行高頻次的共情對話練習。</p>
+                    <div class="bg-white p-4 rounded-2xl shadow-sm border border-emerald-50">
+                        <ul class="list-disc ml-5 space-y-2 text-xs">
+                            <li>臨床溝通標準化病床（SP）成本高昂。</li>
+                            <li>傳統反饋缺乏多模態大數據分析。</li>
+                            <li>跨專業協作（IPE）場景模擬難度大。</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Core Logic -->
+            <div class="bento-item col-span-1 border-l-4 border-emerald-500">
+                <h2 class="section-title text-lg text-emerald-700">核心學習鏈</h2>
+                <div class="flex flex-col gap-4 text-xs font-bold text-gray-700">
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-medical-primary text-white flex items-center justify-center">1</div>
+                        <div>臨床擬真：14 種場域選單</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-medical-primary text-white flex items-center justify-center">2</div>
+                        <div>AI 對話：Gemini 2.0 賦能互動</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-medical-primary text-white flex items-center justify-center">3</div>
+                        <div>IPE 協作：跨專業訊息整合</div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-medical-primary text-white flex items-center justify-center">4</div>
+                        <div>深度評估：精準人文共情反饋</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Technology -->
+            <div class="bento-item col-span-2 bg-[#2D4D47] text-white">
+                <h2 class="section-title text-lg border-white text-emerald-100">AI 技術亮點：系統心臟</h2>
+                <div class="grid grid-cols-3 gap-8 mt-6">
+                    <div class="space-y-2">
+                        <div class="text-emerald-400 font-bold">動態決策樹</div>
+                        <p class="text-[10px] text-emerald-100/60 leading-normal">模擬細膩情感轉變，確保對話具備臨床真實感與隨機性。</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-emerald-400 font-bold">跨專業(IPE)推理</div>
+                        <p class="text-[10px] text-emerald-100/60 leading-normal">整合醫療團隊不同職類視野，強化團隊溝通與權力梯度應對能力。</p>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="text-emerald-400 font-bold">共情評核引擎</div>
+                        <p class="text-[10px] text-emerald-100/60 leading-normal">利用 LLM 進行文字、語氣與內容的綜合分析，提出可落實的改進建議。</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Future & Impact -->
+            <div class="bento-item col-span-1">
+                <h2 class="section-title text-lg">預期影響 (Impact)</h2>
+                <div class="relative mt-4">
+                    <div class="h-[150px] flex items-end gap-2">
+                        <div class="flex-1 bg-emerald-100 rounded-t-xl h-[40%] flex items-center justify-center text-[10px] font-bold text-emerald-700">傳統教學</div>
+                        <div class="flex-1 bg-medical-primary rounded-t-xl h-[95%] flex items-center justify-center text-[10px] font-bold text-white">MEDILOGUE</div>
+                    </div>
+                    <p class="text-center text-[10px] mt-4 text-gray-400">效率提升 75% | 練習頻度增加 10x</p>
+                </div>
+            </div>
+
+            <div class="bento-item col-span-1 bg-emerald-50 border-emerald-100">
+                <h2 class="section-title text-lg text-emerald-900 border-emerald-500">實施路徑</h2>
+                <div class="space-y-4">
+                    <div class="text-[10px]">
+                        <span class="font-bold text-emerald-800">Phase 1: 開發優化</span> (M1-2) - 14 個教案與 UI 完善。
+                    </div>
+                    <div class="text-[10px]">
+                        <span class="font-bold text-emerald-800">Phase 2: 驗證校準</span> (M3-4) - 臨床模擬真實度與 AI 信校測量。
+                    </div>
+                    <div class="text-[10px]">
+                        <span class="font-bold text-emerald-800">Phase 3: 推廣試點</span> (M5-6) - 院校課程導入與生成大數據报告。
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="p-12 border-t border-gray-100 flex justify-between items-center bg-gray-50 h-[100px]">
+            <div class="text-medical-primary font-bold tracking-tighter text-2xl uppercase">MediLogue Platform</div>
+            <div class="text-[10px] text-gray-400 text-right">
+                © 2026 AI Smart Medical Training Project Team<br>
+                Supported by Generative AI & Medical Humanism Research
+            </div>
+        </footer>
+    </div>
+
+</body>
+</html>

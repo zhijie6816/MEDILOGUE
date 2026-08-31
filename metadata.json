@@ -1,0 +1,11 @@
+{
+  "name": "MEDILOGUE",
+  "description": "An AI-powered empathy and interprofessional education platform for healthcare communication.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

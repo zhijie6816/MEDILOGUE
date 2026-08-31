@@ -1,0 +1,103 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function isAdmin() { return isSignedIn() && request.auth.token.email == 'zhijie6816@gmail.com'; }
+
+    // Session Validation
+    function isValidSession(data) {
+      return data.keys().hasAll(['userId', 'patientId', 'type', 'userRole', 'status', 'createdAt']) &&
+             data.keys().size() <= 7 &&
+             data.userId == request.auth.uid &&
+             data.patientId is string &&
+             data.type in ['individual', 'team'] &&
+             data.userRole in ['Doctor', 'Nurse', 'SocialWorker', 'Psychologist'] &&
+             data.status in ['active', 'completed'] &&
+             data.createdAt == request.time;
+    }
+
+    match /sessions/{sessionId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidSession(request.resource.data);
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && (
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'updatedAt', 'duration', 'humanReviewRequested']) && 
+         request.resource.data.status in ['active', 'completed'] &&
+         (request.resource.data.get('duration', resource.data.get('duration', 0)) is number) &&
+         (request.resource.data.get('humanReviewRequested', false) is bool) &&
+         request.resource.data.updatedAt == request.time)
+      );
+      allow delete: if isOwner(resource.data.userId);
+
+      match /messages/{messageId} {
+        allow list: if isSignedIn() && get(/databases/$(database)/documents/sessions/$(sessionId)).data.userId == request.auth.uid;
+        allow create: if isSignedIn() && get(/databases/$(database)/documents/sessions/$(sessionId)).data.userId == request.auth.uid &&
+                      request.resource.data.keys().hasAll(['role', 'roleName', 'text', 'timestamp']) &&
+                      request.resource.data.role in ['user', 'model'] &&
+                      request.resource.data.text is string &&
+                      request.resource.data.text.size() <= 2000 &&
+                      request.resource.data.timestamp is timestamp;
+        allow delete: if isSignedIn() && get(/databases/$(database)/documents/sessions/$(sessionId)).data.userId == request.auth.uid;
+      }
+    }
+
+    // Evaluation Validation
+    function isValidEvaluation(data) {
+      return data.keys().hasAll(['userId', 'sessionId', 'scores', 'createdAt']) &&
+             data.userId == request.auth.uid &&
+             data.sessionId is string &&
+             data.scores.humanity is number &&
+             data.scores.professionalism is number &&
+             data.scores.communication is number &&
+             data.scores.empathy is number &&
+             data.scores.ethics is number &&
+             data.createdAt == request.time;
+    }
+
+    match /evaluations/{evalId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidEvaluation(request.resource.data) &&
+                    exists(/databases/$(database)/documents/sessions/$(request.resource.data.sessionId)) &&
+                    get(/databases/$(database)/documents/sessions/$(request.resource.data.sessionId)).data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['soapNote']) &&
+        request.resource.data.soapNote is string
+      );
+      allow delete: if isOwner(resource.data.userId);
+    }
+
+    // Reflection Validation
+    function isValidReflection(data) {
+      return data.keys().hasAll(['userId', 'sessionId', 'content', 'createdAt']) &&
+             data.userId == request.auth.uid &&
+             isValidId(data.sessionId) &&
+             data.content is string &&
+             data.content.size() <= 10000 &&
+             data.createdAt == request.time;
+    }
+
+    match /reflections/{reflId} {
+      allow list: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow get: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && isValidReflection(request.resource.data) &&
+                    exists(/databases/$(database)/documents/sessions/$(request.resource.data.sessionId)) &&
+                    get(/databases/$(database)/documents/sessions/$(request.resource.data.sessionId)).data.userId == request.auth.uid;
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid && (
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['content', 'updatedAt']) &&
+        request.resource.data.content is string &&
+        request.resource.data.content.size() <= 10000 &&
+        request.resource.data.updatedAt == request.time
+      );
+      allow delete: if isOwner(resource.data.userId);
+    }
+  }
+}

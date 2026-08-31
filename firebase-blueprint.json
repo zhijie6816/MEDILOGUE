@@ -1,0 +1,87 @@
+{
+  "entities": {
+    "Session": {
+      "title": "Simulation Session",
+      "description": "Records of an individual or team simulation session with an AI patient.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "The UID of the student." },
+        "patientId": { "type": "string", "description": "The ID of the patient persona used." },
+        "type": { "type": "string", "enum": ["individual", "team"], "description": "Type of simulation." },
+        "userRole": { "type": "string", "enum": ["Doctor", "Nurse", "SocialWorker", "Psychologist"], "description": "The role played by the user." },
+        "status": { "type": "string", "enum": ["active", "completed"], "description": "Current status of the session." },
+        "duration": { "type": "number", "description": "Duration of the session in seconds." },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" },
+        "humanReviewRequested": { "type": "boolean", "description": "Whether the user requested human review." }
+      },
+      "required": ["userId", "patientId", "type", "userRole", "status", "createdAt"]
+    },
+    "Message": {
+      "title": "Chat Message",
+      "description": "A single message in a session.",
+      "type": "object",
+      "properties": {
+        "role": { "type": "string", "enum": ["user", "model"], "description": "Who sent the message." },
+        "roleName": { "type": "string", "description": "Display name of the sender (e.g. '護理師 A', '陳先生')." },
+        "text": { "type": "string", "description": "Message content." },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["role", "roleName", "text", "timestamp"]
+    },
+    "Evaluation": {
+      "title": "Performance Evaluation",
+      "description": "AI-generated evaluation of a completed session.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "sessionId": { "type": "string" },
+        "scores": {
+          "type": "object",
+          "properties": {
+            "humanity": { "type": "number" },
+            "professionalism": { "type": "number" },
+            "communication": { "type": "number" },
+            "empathy": { "type": "number" },
+            "ethics": { "type": "number" }
+          }
+        },
+        "keyObservations": { "type": "array", "items": { "type": "string" } },
+        "suggestions": { "type": "array", "items": { "type": "string" } },
+        "empathyLevel": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["sessionId", "scores", "createdAt"]
+    },
+    "Reflection": {
+      "title": "Student Reflection",
+      "description": "Student's narrative medicine reflection entry.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "sessionId": { "type": "string" },
+        "content": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "sessionId", "content", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/sessions": {
+      "schema": "Session",
+      "description": "Root collection for simulation sessions."
+    },
+    "/sessions/{sessionId}/messages": {
+      "schema": "Message",
+      "description": "Subcollection for chat logs."
+    },
+    "/evaluations": {
+      "schema": "Evaluation",
+      "description": "Root collection for AI evaluations."
+    },
+    "/reflections": {
+      "schema": "Reflection",
+      "description": "Root collection for student reflections."
+    }
+  }
+}
